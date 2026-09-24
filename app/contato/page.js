@@ -46,7 +46,7 @@ export default function ContatoPage() {
           </p>
           <p>
             <strong style={{ color: "var(--color-white)" }}>Local:</strong>{" "}
-            Joinville, SC — Brasil
+            São Paulo — Brasil
           </p>
         </div>
 
