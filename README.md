@@ -3,6 +3,31 @@
 Site de apresentação da **Primos Code**, construído com **Next.js** (React) e
 JavaScript puro, usando as cores e a logo da apresentação da empresa.
 
+O site apresenta os serviços, pacotes, modelo comercial e diferenciais da
+Primos Code. Ele também possui uma página de contato com formulário visual e
+um rodapé compartilhado com links para Instagram e LinkedIn.
+
+## Como o site funciona
+
+O projeto usa o App Router do Next.js. A aplicação começa em
+`app/layout.js`, que monta a estrutura comum de todas as páginas:
+
+1. O `Header` aparece no topo.
+2. O conteúdo da rota atual entra dentro de `<main>`.
+3. O `Footer` aparece no final, incluindo localização e redes sociais.
+
+Cada pasta dentro de `app/` representa uma rota. Por exemplo,
+`app/servicos/page.js` gera a página `/servicos`. Os componentes da pasta
+`components/` são reutilizados para manter o visual consistente.
+
+O formulário da página `/contato` funciona atualmente apenas no front-end:
+ele valida os campos obrigatórios, registra os dados no console do navegador
+e mostra a mensagem de confirmação. Ele não envia e-mails nem possui API de
+contato configurada neste momento.
+
+Os ícones do Instagram e do LinkedIn ficam no componente global
+`components/Footer.js` e abrem os perfis da empresa em uma nova aba.
+
 ---
 
 ## 1. O que é cada tecnologia (resumo rápido)
@@ -130,64 +155,150 @@ dourado da marca, você troca em uma linha e o site inteiro atualiza.
 
 ## 4. Como rodar o projeto na sua máquina
 
-Pré-requisito: ter o [Node.js](https://nodejs.org/) instalado (versão 18
-ou superior).
+### Pré-requisitos
+
+- [Node.js](https://nodejs.org/) 18 ou superior
+- npm, instalado junto com o Node.js
+- Git, caso queira clonar o projeto
+
+### Instalação do zero
+
+Clone o repositório e entre na pasta que contém o `package.json`:
 
 ```bash
-# 1. Entrar na pasta do projeto
+git clone https://github.com/Renildo-Junior/Primos-code.git
+cd Primos-code
+```
+
+Se o projeto já estiver baixado, entre diretamente na pasta correta:
+
+```bash
 cd primos-code-site
+```
 
-# 2. Instalar as dependências (cria a pasta node_modules)
+Instale as dependências:
+
+```bash
 npm install
+```
 
-# 3. Rodar em modo desenvolvimento
+### Ambiente de desenvolvimento
+
+Inicie o servidor:
+
+```bash
 npm run dev
 ```
 
-Depois abra **http://localhost:3000** no navegador. Qualquer alteração
-que você salvar em um arquivo aparece na hora (hot reload).
+Abra no navegador:
 
-Para gerar a versão de produção (otimizada):
+```text
+http://localhost:3000
+```
+
+Rotas disponíveis no ambiente local:
+
+| Página | URL |
+|---|---|
+| Home | `http://localhost:3000/` |
+| Serviços | `http://localhost:3000/servicos` |
+| Pacotes | `http://localhost:3000/pacotes` |
+| Modelo comercial | `http://localhost:3000/modelo-comercial` |
+| Diferenciais | `http://localhost:3000/diferenciais` |
+| Contato | `http://localhost:3000/contato` |
+
+Enquanto `npm run dev` estiver ativo, salve os arquivos para usar o
+recarregamento automático. Para encerrar o servidor, pressione `Ctrl + C`.
+
+### Build e produção local
+
+Para validar e gerar a versão otimizada:
 
 ```bash
 npm run build
+```
+
+Depois da build, execute a versão de produção:
+
+```bash
 npm run start
 ```
 
----
+O comando `npm run start` precisa ser executado depois de `npm run build`.
+Ele normalmente disponibiliza a aplicação em `http://localhost:3000`.
 
-## 5. Como subir para o GitHub
+### Comandos disponíveis
+
+| Comando | Função |
+|---|---|
+| `npm install` | Instala as dependências do `package.json` |
+| `npm run dev` | Inicia o ambiente de desenvolvimento |
+| `npm run build` | Gera a versão otimizada para produção |
+| `npm run start` | Executa a build de produção |
+| `npm run lint` | Comando legado do projeto para lint |
+
+### Alterando o projeto
+
+- Edite páginas em `app/`.
+- Edite componentes reutilizáveis em `components/`.
+- Edite cores e layout global em `app/globals.css`.
+- Coloque imagens públicas em `public/img/`.
+- Salve o arquivo e atualize o navegador quando necessário.
+
+Não coloque senhas, tokens ou arquivos `.env.local` no Git. O `.gitignore`
+do projeto já ignora arquivos de ambiente e a pasta `node_modules`.
+
+Para conferir quais arquivos foram alterados:
 
 ```bash
-# dentro da pasta primos-code-site
-git init
-git add .
-git commit -m "Primeira versão do site institucional Primos Code"
+git status
+```
 
-# crie um repositório vazio no GitHub antes deste passo,
-# depois copie a URL que ele te dá (SSH ou HTTPS)
-git remote add origin <URL_DO_SEU_REPOSITORIO>
-git branch -M main
-git push -u origin main
+O projeto pode ser executado em qualquer ambiente com Node.js compatível;
+não é necessário instalar React ou Next.js globalmente.
+
+---
+
+## 5. Como publicar no GitHub
+
+```bash
+# conferir as alterações
+git status
+
+# preparar os arquivos alterados
+git add .
+git commit -m "Descreve a alteração"
+git push origin main
 ```
 
 O arquivo `.gitignore` já está configurado para **não enviar** a pasta
 `node_modules` (ela é recriada com `npm install`) nem arquivos `.env`
 com senhas ou chaves.
 
-### Colocando o site no ar (deploy)
+### Publicando na Vercel
+
 A forma mais simples para projetos Next.js é a [Vercel](https://vercel.com/)
-(empresa que mantém o Next.js): você conecta o repositório do GitHub e
-ela publica o site automaticamente a cada `git push`, de graça no plano
-gratuito.
+(empresa que mantém o Next.js). Para publicar:
+
+1. Entre na Vercel usando sua conta do GitHub.
+2. Clique em **Add New > Project**.
+3. Importe o repositório `Renildo-Junior/Primos-code`.
+4. Mantenha o framework como **Next.js**.
+5. Deixe os comandos de build e a pasta de saída no padrão automático.
+6. Clique em **Deploy**.
+
+Depois do primeiro deploy, cada `git push origin main` pode iniciar um novo
+deploy automaticamente, se o projeto estiver conectado ao GitHub.
+
+Para testar o resultado, abra a URL `.vercel.app` fornecida pela Vercel e
+acesse as mesmas rotas listadas na seção de ambiente local.
 
 ---
 
 ## 6. Próximos passos sugeridos
 
 - Trocar o e-mail e o texto de contato pelos dados reais da empresa.
-- Conectar o formulário de contato a um serviço de envio de e-mail (por
-  exemplo, uma rota de API do próprio Next.js em `app/api/contato/route.js`,
-  ou um serviço como Resend/EmailJS).
+- Conectar o formulário de contato a um serviço de envio de e-mail quando
+  essa funcionalidade for necessária, usando variáveis de ambiente seguras.
 - Adicionar imagens reais do time/projetos na home.
 - Registrar um domínio (ex: primoscode.com.br) e apontar para o deploy.
