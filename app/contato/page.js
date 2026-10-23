@@ -8,28 +8,27 @@
 import { useState } from "react";
 import Section from "@/components/Section";
 
-export default function ContatoPage() {
-  // useState guarda o "estado" do formulário: os valores digitados
-  // e se ele já foi enviado ou não.
-  const [form, setForm] = useState({ nome: "", email: "", mensagem: "" });
-  const [enviado, setEnviado] = useState(false);
+const whatsappNumber = "5511988758704";
 
-  // Chamado a cada tecla digitada em qualquer campo.
-  // "e.target.name" é o atributo name do input (ex: "nome"),
-  // e usamos ele como chave dinâmica no objeto do estado.
+export default function ContatoPage() {
+  const [form, setForm] = useState({ nome: "", email: "", mensagem: "" });
+
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  // Chamado quando o formulário é enviado.
   function handleSubmit(e) {
-    e.preventDefault(); // evita o recarregamento padrão da página
+    e.preventDefault();
 
-    // AQUI é onde, no futuro, você chamaria uma API real:
-    // fetch("/api/contato", { method: "POST", body: JSON.stringify(form) })
-    // Por enquanto só simulamos o envio no front-end.
-    console.log("Dados do formulário:", form);
-    setEnviado(true);
+    const message = [
+      `Olá! Meu nome é ${form.nome}.`,
+      `Meu e-mail: ${form.email}`,
+      "",
+      form.mensagem,
+    ].join("\n");
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -37,12 +36,13 @@ export default function ContatoPage() {
       <div className="grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
         <div>
           <p style={{ marginBottom: 16 }}>
-            Conte um pouco sobre o desafio do seu negócio. Nosso time retorna
-            para agendar o diagnóstico inicial.
+            Conte um pouco sobre o desafio do seu negócio. Ao continuar, sua
+            mensagem será preparada no WhatsApp para você enviar diretamente
+            para o nosso time.
           </p>
           <p>
             <strong style={{ color: "var(--color-white)" }}>E-mail:</strong>{" "}
-            contato@primoscode.com.br
+            <a href="mailto:Primoscode@gmail.com">Primoscode@gmail.com</a>
           </p>
           <p>
             <strong style={{ color: "var(--color-white)" }}>Local:</strong>{" "}
@@ -51,52 +51,44 @@ export default function ContatoPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="card" style={{ display: "grid", gap: 16 }}>
-          {enviado ? (
-            <p style={{ color: "var(--color-gold)" }}>
-              Mensagem enviada! Em breve entraremos em contato.
-            </p>
-          ) : (
-            <>
-              <div>
-                <label htmlFor="nome">Nome</label>
-                <input
-                  id="nome"
-                  name="nome"
-                  value={form.nome}
-                  onChange={handleChange}
-                  required
-                  style={inputStyle}
-                />
-              </div>
-              <div>
-                <label htmlFor="email">E-mail</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={form.email}
-                  onChange={handleChange}
-                  required
-                  style={inputStyle}
-                />
-              </div>
-              <div>
-                <label htmlFor="mensagem">Mensagem</label>
-                <textarea
-                  id="mensagem"
-                  name="mensagem"
-                  rows={4}
-                  value={form.mensagem}
-                  onChange={handleChange}
-                  required
-                  style={inputStyle}
-                />
-              </div>
-              <button type="submit" className="btn btn-primary">
-                Enviar mensagem
-              </button>
-            </>
-          )}
+          <div>
+            <label htmlFor="nome">Nome</label>
+            <input
+              id="nome"
+              name="nome"
+              value={form.nome}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label htmlFor="email">E-mail</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label htmlFor="mensagem">Mensagem</label>
+            <textarea
+              id="mensagem"
+              name="mensagem"
+              rows={4}
+              value={form.mensagem}
+              onChange={handleChange}
+              required
+              style={inputStyle}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary">
+            Continuar pelo WhatsApp
+          </button>
         </form>
       </div>
     </Section>
