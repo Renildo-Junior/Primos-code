@@ -4,8 +4,9 @@ Site de apresentação da **Primos Code**, construído com **Next.js** (React) e
 JavaScript puro, usando as cores e a logo da apresentação da empresa.
 
 O site apresenta os serviços, pacotes, modelo comercial e diferenciais da
-Primos Code. Ele também possui uma página de contato com formulário visual e
-um rodapé compartilhado com links para Instagram e LinkedIn.
+Primos Code em uma experiência responsiva. A home reúne atalhos para as
+soluções e etapas de atendimento; o menu móvel pode ser aberto e fechado; e
+os serviços incluem suporte técnico para problemas do dia a dia.
 
 ## Como o site funciona
 
@@ -20,10 +21,26 @@ Cada pasta dentro de `app/` representa uma rota. Por exemplo,
 `app/servicos/page.js` gera a página `/servicos`. Os componentes da pasta
 `components/` são reutilizados para manter o visual consistente.
 
-O formulário da página `/contato` funciona atualmente apenas no front-end:
-ele valida os campos obrigatórios, registra os dados no console do navegador
-e mostra a mensagem de confirmação. Ele não envia e-mails nem possui API de
-contato configurada neste momento.
+O formulário da página `/contato` valida os campos obrigatórios e prepara uma
+mensagem preenchida para o WhatsApp da empresa, que o cliente pode revisar e
+enviar. Ele não envia mensagens automaticamente, e-mails nem possui API de
+contato configurada.
+
+Na página `/pacotes`, cada opção descreve para quem é indicada e exemplos do
+que pode incluir. Os botões de cotação levam ao formulário com o pacote
+selecionado. Os links de contato em `/servicos` também preenchem o serviço de
+interesse. A cotação e o escopo são definidos após a conversa com o cliente;
+não há preços fixos publicados.
+
+A página `/servicos#suporte` descreve ajuda cotidiana com computadores lentos,
+limpeza lógica, configurações e instalações, atualizações do sistema
+operacional, dificuldades com aplicativos e manutenção de sistemas.
+
+As fotografias da home e dos serviços são carregadas do Unsplash. Elas são
+ilustrativas e ficam hospedadas externamente, portanto precisam de conexão
+com a internet para aparecer. O Unsplash permite o uso das fotos sob sua
+licença sem autorização individual prévia; consulte a [licença do
+Unsplash](https://unsplash.com/license) para os termos aplicáveis.
 
 Os ícones do Instagram e do LinkedIn ficam no componente global
 `components/Footer.js` e abrem os perfis da empresa em uma nova aba.
@@ -60,11 +77,11 @@ primos-code-site/
 │   ├── diferenciais/page.js   -> URL "/diferenciais"
 │   └── contato/page.js        -> URL "/contato"
 ├── components/                <- pedaços de interface reutilizados nas páginas
-│   ├── Header.js               (cabeçalho fixo com logo e menu)
+│   ├── Header.js               (cabeçalho com menu móvel interativo)
 │   ├── Footer.js               (rodapé)
 │   ├── Section.js              (bloco padrão: eyebrow + título + descrição)
 │   ├── FeatureCard.js          (card com título + lista de itens)
-│   └── PricingCard.js          (card usado na página de Pacotes)
+│   └── PricingCard.js          (pacotes e atalhos para cotação)
 ├── public/
 │   └── img/
 │       ├── logo.png            (logo completa, extraída da apresentação)
@@ -201,11 +218,26 @@ Rotas disponíveis no ambiente local:
 | Página | URL |
 |---|---|
 | Home | `http://localhost:3000/` |
-| Serviços | `http://localhost:3000/servicos` |
+| Serviços e suporte técnico | `http://localhost:3000/servicos` |
+| Seção de suporte técnico | `http://localhost:3000/servicos#suporte` |
 | Pacotes | `http://localhost:3000/pacotes` |
 | Modelo comercial | `http://localhost:3000/modelo-comercial` |
 | Diferenciais | `http://localhost:3000/diferenciais` |
 | Contato | `http://localhost:3000/contato` |
+
+### Fluxo de cotação e contato
+
+1. Escolha um pacote em `/pacotes`, ou inicie uma conversa sobre um serviço
+   em `/servicos`.
+2. O formulário de `/contato` abre com a opção correspondente pré-selecionada.
+   Também é possível escolher um serviço e um pacote diretamente no formulário.
+3. Preencha nome, e-mail e descrição da necessidade. Se possível, informe
+   prazos, quantidade de equipamentos e o problema observado.
+4. Clique em **Preparar mensagem no WhatsApp** para revisar os dados no
+   WhatsApp antes de enviar.
+
+O cliente decide se envia a mensagem. A cotação não é automática: a equipe
+avalia o contexto para indicar o pacote e escopo adequados.
 
 Enquanto `npm run dev` estiver ativo, salve os arquivos para usar o
 recarregamento automático. Para encerrar o servidor, pressione `Ctrl + C`.
@@ -235,7 +267,7 @@ Ele normalmente disponibiliza a aplicação em `http://localhost:3000`.
 | `npm run dev` | Inicia o ambiente de desenvolvimento |
 | `npm run build` | Gera a versão otimizada para produção |
 | `npm run start` | Executa a build de produção |
-| `npm run lint` | Comando legado do projeto para lint |
+| `npm run lint` | Executa `next lint`; requer configuração ESLint local |
 
 ### Alterando o projeto
 
@@ -300,5 +332,6 @@ acesse as mesmas rotas listadas na seção de ambiente local.
 - Trocar o e-mail e o texto de contato pelos dados reais da empresa.
 - Conectar o formulário de contato a um serviço de envio de e-mail quando
   essa funcionalidade for necessária, usando variáveis de ambiente seguras.
-- Adicionar imagens reais do time/projetos na home.
+- Se preferir não depender de imagens hospedadas externamente, salvar imagens
+  licenciadas em `public/img/` e atualizar os caminhos nas páginas.
 - Registrar um domínio (ex: primoscode.com.br) e apontar para o deploy.

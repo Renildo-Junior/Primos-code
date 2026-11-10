@@ -5,16 +5,26 @@
 // e o formulário não reagiria aos cliques.
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Section from "@/components/Section";
 
 const whatsappNumber = "5511988758704";
 
 export default function ContatoPage() {
-  const [form, setForm] = useState({ nome: "", email: "", mensagem: "" });
+  const [form, setForm] = useState({ nome: "", email: "", servico: "", pacote: "", mensagem: "" });
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    setForm((current) => ({
+      ...current,
+      servico: query.get("servico") || current.servico,
+      pacote: query.get("pacote") || current.pacote,
+    }));
+  }, []);
 
   function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((current) => ({ ...current, [name]: value }));
   }
 
   function handleSubmit(e) {
@@ -23,9 +33,11 @@ export default function ContatoPage() {
     const message = [
       `Olá! Meu nome é ${form.nome}.`,
       `Meu e-mail: ${form.email}`,
+      form.servico ? `Serviço de interesse: ${form.servico}` : "",
+      form.pacote ? `Pacote de interesse: ${form.pacote}` : "",
       "",
       form.mensagem,
-    ].join("\n");
+    ].filter((line) => line !== "").join("\n");
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
 
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
@@ -33,13 +45,17 @@ export default function ContatoPage() {
 
   return (
     <Section eyebrow="Contato" title="Vamos falar sobre o seu projeto">
-      <div className="grid" style={{ gridTemplateColumns: "1fr 1fr" }}>
+      <div className="contact-layout">
         <div>
           <p style={{ marginBottom: 16 }}>
-            Conte um pouco sobre o desafio do seu negócio. Ao continuar, sua
-            mensagem será preparada no WhatsApp para você enviar diretamente
-            para o nosso time.
+            Conte o que está acontecendo ou o que gostaria de construir. Se veio
+            de um pacote ou serviço, ele já aparece selecionado — nossa equipe
+            vai entender seu contexto e preparar uma cotação adequada.
           </p>
+          <div className="contact-promise">
+            <span aria-hidden="true">✦</span>
+            <p><strong>Sem compromisso e sem termos complicados.</strong><br />Você conversa com pessoas que querem entender antes de recomendar.</p>
+          </div>
           <p>
             <strong style={{ color: "var(--color-white)" }}>E-mail:</strong>{" "}
             <a href="mailto:Primoscode@gmail.com">Primoscode@gmail.com</a>
@@ -50,7 +66,7 @@ export default function ContatoPage() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="card" style={{ display: "grid", gap: 16 }}>
+        <form onSubmit={handleSubmit} className="card contact-form">
           <div>
             <label htmlFor="nome">Nome</label>
             <input
@@ -75,6 +91,40 @@ export default function ContatoPage() {
             />
           </div>
           <div>
+            <label htmlFor="servico">O que você precisa?</label>
+            <select
+              id="servico"
+              name="servico"
+              value={form.servico}
+              onChange={handleChange}
+              style={inputStyle}
+            >
+              <option value="">Selecione se já souber (opcional)</option>
+              <option>Desenvolvimento de software</option>
+              <option>Qualidade de software</option>
+              <option>Suporte técnico</option>
+              <option>Manutenção de computadores</option>
+              <option>Automação e integrações</option>
+              <option>Outro / ainda não sei</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="pacote">Pacote para cotação</label>
+            <select
+              id="pacote"
+              name="pacote"
+              value={form.pacote}
+              onChange={handleChange}
+              style={inputStyle}
+            >
+              <option value="">Quero uma recomendação</option>
+              <option>Primos Code Prime</option>
+              <option>Primos Code Elite</option>
+              <option>Primos Code Premium</option>
+              <option>Quero ajuda para escolher</option>
+            </select>
+          </div>
+          <div>
             <label htmlFor="mensagem">Mensagem</label>
             <textarea
               id="mensagem"
@@ -84,11 +134,13 @@ export default function ContatoPage() {
               onChange={handleChange}
               required
               style={inputStyle}
+              placeholder="O que você precisa? Qual problema quer resolver? Se puder, conte prazos e quantos equipamentos ou pessoas estão envolvidos."
             />
           </div>
           <button type="submit" className="btn btn-primary">
-            Continuar pelo WhatsApp
+            Preparar mensagem no WhatsApp <span aria-hidden="true">↗</span>
           </button>
+          <span className="form-note">Sua mensagem abre no WhatsApp para você revisar e enviar.</span>
         </form>
       </div>
     </Section>
@@ -106,4 +158,5 @@ const inputStyle = {
   backgroundColor: "var(--color-bg)",
   color: "var(--color-white)",
   fontFamily: "inherit",
+  fontSize: "1rem",
 };
